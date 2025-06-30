@@ -1,376 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Face Mesh and Chewing Detector</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
-  /* Reset and base */
-  *, *::before, *::after {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background: #121212;
-    color: #e0e0e0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  a {
-    color: #06b6d4;
-    text-decoration: none;
-  }
-  a:hover, a:focus {
-    text-decoration: underline;
-  }
-
-  header {
-    background: rgba(6, 182, 212, 0.2);
-    backdrop-filter: saturate(180%) blur(10px);
-    padding: 1rem 2rem;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .logo {
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: #06b6d4;
-  }
-  nav {
-    display: flex;
-    gap: 1.5rem;
-  }
-  nav a {
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 0.25rem 0.5rem;
-  }
-  nav a[aria-current="page"] {
-    border-bottom: 2px solid #06b6d4;
-  }
-  /* Mobile hamburger menu */
-  .mobile-toggle {
-    display: none;
-    background: none;
-    border: none;
-    color: #06b6d4;
-    font-size: 2rem;
-    cursor: pointer;
-  }
-  @media (max-width: 640px) {
-    nav {
-      display: none;
-      position: fixed;
-      top: 60px;
-      right: 0;
-      background: #121212;
-      width: 100%;
-      max-width: 300px;
-      flex-direction: column;
-      padding: 1rem;
-      box-shadow: -2px 0 10px rgba(0,0,0,0.7);
-      height: calc(100vh - 60px);
-      overflow-y: auto;
-      z-index: 1100;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ChewCheck - Fast Detection</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #ffe0dc, #e0f7f9);
+      text-align: center;
+      margin: 0;
+      padding: 0;
     }
-    nav.show {
-      display: flex;
+    h1 {
+      color: #06b6d4;
+      margin: 20px 0 0;
     }
-    .mobile-toggle {
+    #assistant img {
+      width: 100px;
+      margin: 10px 0;
+    }
+    video {
+      width: 90%;
+      max-width: 480px;
+      border-radius: 16px;
+      margin: 20px auto 10px;
       display: block;
     }
-  }
-
-  main {
-    flex-grow: 1;
-    padding: 2rem 1rem;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  h1 {
-    font-weight: 800;
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: #06b6d4;
-    text-align: center;
-  }
-
-  /* Container for video and canvas */
-  .video-container {
-    position: relative;
-    width: 100%;
-    padding-top: 75%; /* 4:3 aspect ratio */
-    background: #222;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 0 25px rgba(6, 182, 212, 0.25);
-  }
-  video, canvas {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 16px;
-  }
-
-  .chew-count {
-    margin-top: 1rem;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #22c55e; /* green */
-    text-align: center;
-    user-select: none;
-  }
-
-  .controls {
-    margin: 2rem auto 0;
-    text-align: center;
-  }
-  button {
-    background: transparent;
-    border: 2px solid #06b6d4;
-    color: #06b6d4;
-    font-size: 1.1rem;
-    font-weight: 600;
-    padding: 0.75rem 2rem;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  button:hover, button:focus {
-    background: #06b6d4;
-    color: #121212;
-    outline: none;
-  }
-
-  footer {
-    background: #181818;
-    color: #777;
-    padding: 2rem 1rem;
-    font-size: 0.9rem;
-    text-align: center;
-    user-select: none;
-  }
-  footer a {
-    color: #06b6d4;
-  }
-  footer .social-icons {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-  }
-  footer .social-icons a {
-    font-size: 1.5rem;
-  }
-
-  /* Accessibility focus outlines */
-  button:focus-visible,
-  a:focus-visible {
-    outline: 3px solid #22c55e;
-    outline-offset: 2px;
-  }
-</style>
+    .chew-count {
+      font-size: 1.5rem;
+      color: #06b6d4;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: 2px solid #06b6d4;
+      color: #06b6d4;
+      background: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #06b6d4;
+      color: #fff;
+    }
+    button:disabled {
+      opacity: 0.6;
+    }
+    .final-report {
+      display: none;
+      background: #fff;
+      margin: 20px auto;
+      padding: 20px;
+      max-width: 480px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+    .report-title {
+      font-weight: bold;
+      color: #06b6d4;
+      text-align: center;
+    }
+    .chew-remark.good { color: green; }
+    .chew-remark.average { color: orange; }
+    .chew-remark.poor { color: red; }
+  </style>
 </head>
 <body>
-<header>
-  <div class="logo">FaceMesh Chew Detector</div>
-  <button class="mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false">&#9776;</button>
-  <nav aria-label="Primary navigation">
-    <a href="#" aria-current="page">Home</a>
-    <a href="https://google.github.io/mediapipe/solutions/face_mesh.html" target="_blank" rel="noopener">MediaPipe Docs</a>
-    <a href="https://github.com/google/mediapipe" target="_blank" rel="noopener">GitHub</a>
-  </nav>
-</header>
 
-<main>
-  <h1>Real-time Face Mesh & Chewing Detection</h1>
-  <div class="video-container" aria-label="Webcam video with face mesh drawing">
-    <video id="video" playsinline autoplay muted></video>
-    <canvas id="output"></canvas>
+  <h1>🦷 ChewCheck</h1>
+  <div id="assistant">
+    <img src="https://media.tenor.com/wVfhA-nP_7cAAAAi/tooth-cute.gif" alt="Assistant" />
   </div>
-  <div class="chew-count" aria-live="polite" aria-atomic="true" id="chewCountDisplay">Chews: 0</div>
 
-  <div class="controls">
-    <button id="startBtn" type="button" aria-label="Start webcam and detection">Start Webcam</button>
-    <button id="stopBtn" type="button" aria-label="Stop webcam and detection" disabled>Stop Webcam</button>
+  <video id="video" autoplay playsinline muted></video>
+  <div class="chew-count" id="chewCountDisplay">Chews: 0</div>
+  <button id="startBtn">Start Webcam</button>
+  <button id="stopBtn" disabled>Stop Webcam</button>
+
+  <div class="final-report" id="finalReport">
+    <div class="report-title">📝 Chewing Report</div>
+    <p><strong>Total Chews:</strong> <span id="totalChews">0</span></p>
+    <p><strong>Session Duration:</strong> <span id="sessionDuration">0 sec</span></p>
+    <p><strong>Chews per Minute:</strong> <span id="chewsPerMin">0</span></p>
+    <p><strong>Consistency:</strong> <span id="chewingConsistency">0%</span></p>
+    <p class="chew-remark" id="chewRemark">Start chewing to get feedback!</p>
   </div>
-</main>
 
-<footer>
-  <p>Built with MediaPipe FaceMesh and JavaScript. © 2024</p>
-  <div class="social-icons" role="region" aria-label="Social media links">
-    <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Visit Twitter profile">
-      <svg style="width:24px;height:24px;fill:#06b6d4;" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22.46 6c-.77.35-1.6.6-2.46.7a4.3 4.3 0 001.88-2.37 8.59 8.59 0 01-2.72 1.04 4.28 4.28 0 00-7.3 3.9A12.12 12.12 0 013 5.16a4.28 4.28 0 001.32 5.7 4.22 4.22 0 01-1.94-.54v.05a4.28 4.28 0 003.44 4.2 4.3 4.3 0 01-1.93.07 4.29 4.29 0 004 2.98A8.6 8.6 0 012 18.33a12.12 12.12 0 006.55 1.92c7.86 0 12.16-6.51 12.16-12.15 0-.18-.01-.36-.02-.54A8.7 8.7 0 0022.46 6z"/></svg>
-    </a>
-    <a href="https://github.com" target="_blank" rel="noopener" aria-label="Visit GitHub profile">
-      <svg style="width:24px;height:24px;fill:#06b6d4;" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.799 8.207 11.387.6.11.793-.26.793-.577V20.9c-3.338.724-4.033-1.415-4.033-1.415-.546-1.387-1.333-1.757-1.333-1.757-1.087-.744.083-.729.083-.729 1.205.083 1.84 1.238 1.84 1.238 1.07 1.834 2.807 1.304 3.492.997.11-.775.418-1.305.76-1.605-2.665-.31-5.466-1.337-5.466-5.93 0-1.31.467-2.382 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23a11.5 11.5 0 016 0c2.295-1.553 3.3-1.23 3.3-1.23.645 1.653.24 2.873.12 3.176.765.838 1.23 1.91 1.23 3.22 0 4.602-2.805 5.617-5.475 5.92.42.36.81 1.096.81 2.21v3.28c0 .315.195.69.8.572A12.013 12.013 0 0024 12.297c0-6.627-5.373-12-12-12"/></svg>
-    </a>
-  </div>
-</footer>
+  <!-- MediaPipe -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.min.js"></script>
-<script>
-  (() => {
-    const videoElement = document.getElementById('video');
-    const canvasElement = document.getElementById('output');
-    const canvasCtx = canvasElement.getContext('2d');
-    const chewCountDisplay = document.getElementById('chewCountDisplay');
+  <script>
+    const video = document.getElementById('video');
     const startBtn = document.getElementById('startBtn');
     const stopBtn = document.getElementById('stopBtn');
-    const mobileToggle = document.querySelector('.mobile-toggle');
-    const navMenu = document.querySelector('nav');
+    const chewCountDisplay = document.getElementById('chewCountDisplay');
+    const finalReport = document.getElementById('finalReport');
+    const totalChewsEl = document.getElementById('totalChews');
+    const sessionDurationEl = document.getElementById('sessionDuration');
+    const chewsPerMinEl = document.getElementById('chewsPerMin');
+    const chewingConsistencyEl = document.getElementById('chewingConsistency');
+    const chewRemarkEl = document.getElementById('chewRemark');
 
-    let camera = null;
+    let stream = null;
     let chewCount = 0;
-    let jawYHistory = [];
-    // To make it more sensitive, lower this threshold (e.g., from 8 to 4)
-    const JAW_MOVEMENT_THRESHOLD = 4;
-    let jawState = 'neutral'; // 'neutral', 'down', 'up'
+    let camera = null;
+    let startTime = null;
+    let chewing = false;
+    let lastChewTime = 0;
+
+    const MOUTH_OPEN_THRESHOLD = 0.015; // more sensitive
+
+    function getMouthOpenRatio(landmarks) {
+      const top = landmarks[13];
+      const bottom = landmarks[14];
+      const left = landmarks[78];
+      const right = landmarks[308];
+      const vertical = Math.abs(top.y - bottom.y);
+      const horizontal = Math.abs(left.x - right.x);
+      return vertical / horizontal;
+    }
 
     function onResults(results) {
-      canvasCtx.save();
-      canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+      if (!results.multiFaceLandmarks || results.multiFaceLandmarks.length === 0) return;
+      const landmarks = results.multiFaceLandmarks[0];
+      const ratio = getMouthOpenRatio(landmarks);
 
-      // Draw webcam video frame mirrored
-      canvasCtx.drawImage(
-        results.image, 0, 0, canvasElement.width, canvasElement.height);
-
-      if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
-        // Draw Face Mesh
-        for (const landmarks of results.multiFaceLandmarks) {
-          window?.mpDrawing?.drawConnectors(
-            canvasCtx, landmarks, window?.mpFaceMesh?.FACEMESH_TESSELATION,
-            {color: '#06b6d4', lineWidth: 1});
-        }
-        // Chewing detection logic on chin (landmark 152)
-        const landmarks = results.multiFaceLandmarks[0];
-        // Calculate pixel Y of landmark 152 on canvas
-        const chinLandmark = landmarks[152];
-        const jawYPx = chinLandmark.y * canvasElement.height;
-        // Track Y history
-        if (jawYHistory.length >= 10) {
-          jawYHistory.shift();
-        }
-        jawYHistory.push(jawYPx);
-
-        if (jawYHistory.length === 10) {
-          // Compute delta vs average of previous 9 frames
-          const avg = jawYHistory.slice(0, 9).reduce((a, b) => a + b, 0) / 9;
-          const delta = jawYPx - avg;
-          if (delta > JAW_MOVEMENT_THRESHOLD && jawState === 'neutral') {
-            jawState = 'down';
-          } else if (delta < -JAW_MOVEMENT_THRESHOLD && jawState === 'down') {
-            jawState = 'up';
-            chewCount += 1;
-            jawState = 'neutral';
-            // Update counter live region
-            chewCountDisplay.textContent = `Chews: ${chewCount}`;
-          }
-        }
+      const now = Date.now();
+      if (ratio > MOUTH_OPEN_THRESHOLD && !chewing && now - lastChewTime > 300) {
+        chewing = true;
       }
-      canvasCtx.restore();
+
+      if (ratio < MOUTH_OPEN_THRESHOLD && chewing) {
+        chewCount++;
+        chewing = false;
+        lastChewTime = now;
+        chewCountDisplay.textContent = `Chews: ${chewCount}`;
+      }
     }
 
-    function adjustCanvasSize() {
-      const videoWidth = videoElement.videoWidth || 640;
-      const videoHeight = videoElement.videoHeight || 480;
-      // Maintain 4:3 aspect ratio
-      let width = videoWidth;
-      let height = videoHeight;
-      // We limit max width for responsiveness
-      const maxWidth = Math.min(window.innerWidth - 40, 900);
-      if (width > maxWidth) {
-        const ratio = maxWidth / width;
-        width = maxWidth;
-        height = height * ratio;
-      }
-      canvasElement.width = width;
-      canvasElement.height = height;
-      videoElement.width = width;
-      videoElement.height = height;
-    }
-
-    const faceMesh = new window.FaceMesh({
-      locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
-      }
+    const faceMesh = new FaceMesh({
+      locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
     });
-    window.mpFaceMesh = window.FaceMesh; // For drawing connectors
-    
+
     faceMesh.setOptions({
       maxNumFaces: 1,
       refineLandmarks: true,
-      minDetectionConfidence: 0.7,
-      minTrackingConfidence: 0.7
+      minDetectionConfidence: 0.6,
+      minTrackingConfidence: 0.6
     });
+
     faceMesh.onResults(onResults);
 
-    // Drawing utils from Mediapipe
-    if(window.drawingUtils) {
-      window.mpDrawing = window.drawingUtils;
-    } else {
-      // fallback to import global drawingUtils
-      window.mpDrawing = window;
-    }
-
-    function startCamera() {
-      if (camera) return;
+    startBtn.onclick = async () => {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 640, height: 480, frameRate: { ideal: 30 } }
+      });
+      video.srcObject = stream;
       chewCount = 0;
-      chewCountDisplay.textContent = `Chews: ${chewCount}`;
-      jawYHistory = [];
-      jawState = 'neutral';
+      chewing = false;
+      chewCountDisplay.textContent = "Chews: 0";
+      finalReport.style.display = "none";
+      startTime = new Date();
 
-      camera = new Camera(videoElement, {
+      camera = new Camera(video, {
         onFrame: async () => {
-          await faceMesh.send({image: videoElement});
+          await faceMesh.send({ image: video });
         },
         width: 640,
         height: 480
       });
+
       camera.start();
       startBtn.disabled = true;
       stopBtn.disabled = false;
-    }
+    };
 
-    function stopCamera() {
-      if (!camera) return;
-      camera.stop();
-      camera = null;
-      startBtn.disabled = false;
+    stopBtn.onclick = () => {
+      if (camera) camera.stop();
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+
       stopBtn.disabled = true;
-      // Clear canvas and video
-      canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-      chewCountDisplay.textContent = 'Chews: 0';
-    }
+      startBtn.disabled = false;
 
-    // Button event handlers
-    startBtn.addEventListener('click', startCamera);
-    stopBtn.addEventListener('click', stopCamera);
+      const endTime = new Date();
+      const durationSec = Math.floor((endTime - startTime) / 1000);
+      const chewsPerMin = (chewCount / durationSec) * 60;
+      const consistency = Math.min(100, Math.round((chewCount / (durationSec / 2)) * 100));
 
-    // Responsive navigation toggle
-    mobileToggle.addEventListener('click', () => {
-      const expanded = mobileToggle.getAttribute('aria-expanded') === 'true';
-      mobileToggle.setAttribute('aria-expanded', (!expanded).toString());
-      navMenu.classList.toggle('show');
-    });
+      totalChewsEl.textContent = chewCount;
+      sessionDurationEl.textContent = `${durationSec} sec`;
+      chewsPerMinEl.textContent = chewsPerMin.toFixed(1);
+      chewingConsistencyEl.textContent = `${consistency}%`;
 
-    // Adjust canvas size on window resize and on video loaded
-    window.addEventListener('resize', adjustCanvasSize);
-    videoElement.addEventListener('loadedmetadata', adjustCanvasSize);
+      let remark = "Start chewing to get feedback!";
+      let remarkClass = "";
 
-  })();
-</script>
+      if (chewCount < 5) {
+        remark = "You're chewing too little. Try to chew more!";
+        remarkClass = "poor";
+      } else if (chewsPerMin < 20) {
+        remark = "Average chewing. Try to be consistent!";
+        remarkClass = "average";
+      } else {
+        remark = "Great job! Very consistent chewing!";
+        remarkClass = "good";
+      }
+
+      chewRemarkEl.textContent = remark;
+      chewRemarkEl.className = `chew-remark ${remarkClass}`;
+      finalReport.style.display = "block";
+    };
+  </script>
 </body>
 </html>
-
