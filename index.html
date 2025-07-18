@@ -4,90 +4,217 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ChewCheck - Fast Detection</title>
+  <!-- Google Fonts - Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
+    /* General Body and Typography */
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom right, #b3d9ff, #e6f7ff);
-
+      font-family: 'Poppins', sans-serif; /* Changed font */
+      background: linear-gradient(to bottom right, #a7d9ff, #e0f2ff); /* Refined gradient */
+      color: #333; /* Darker text for better contrast */
       text-align: center;
       margin: 0;
-      padding: 0;
+      padding: 20px; /* Added padding to body */
+      min-height: 100vh; /* Ensure gradient covers full height */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
     }
+
+    /* Main Container for content */
+    .container {
+      max-width: 600px; /* Limit content width */
+      width: 100%;
+      background: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
     h1 {
-      color: #06b6d4;
-      margin: 20px 0 0;
+      color: #007bff; /* Primary blue, slightly darker for contrast */
+      margin: 0 0 20px; /* Adjusted margin */
+      font-size: 2.8rem; /* Larger title */
+      font-weight: 700; /* Bolder */
+      letter-spacing: -0.5px;
     }
+
     #assistant img {
-      width: 100px;
-      margin: 10px 0;
+      width: 120px; /* Slightly larger */
+      margin: 10px 0 20px; /* Adjusted margin */
+      animation: bounce 2s infinite ease-in-out; /* Added subtle animation */
     }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
     video {
-      width: 90%;
+      width: 100%; /* Use 100% of container width */
       max-width: 480px;
-      border-radius: 16px;
-      margin: 20px auto 10px;
+      border-radius: 18px; /* Slightly larger border-radius */
+      margin: 20px auto 15px;
       display: block;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for video */
+      border: 2px solid #e0f2ff; /* Light border */
     }
+
     .chew-count {
-      font-size: 1.5rem;
-      color: #06b6d4;
+      font-size: 2rem; /* Larger font size */
+      color: #007bff;
+      font-weight: 600; /* Bolder */
+      margin-bottom: 25px; /* More space below */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px; /* Space between icon and text */
     }
+    .chew-count i {
+      color: #007bff;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 15px; /* Space between buttons */
+      margin-bottom: 30px; /* Space below buttons */
+    }
+
     button {
-      margin: 10px;
-      padding: 10px 20px;
-      border-radius: 12px;
-      border: 2px solid #06b6d4;
-      color: #06b6d4;
-      background: #fff;
-      font-size: 1rem;
+      padding: 12px 25px; /* More padding */
+      border-radius: 25px; /* Pill-shaped buttons */
+      border: none; /* Remove default border */
+      font-size: 1.1rem; /* Slightly larger font */
+      font-weight: 600;
       cursor: pointer;
+      transition: all 0.3s ease; /* Smooth transitions */
+      display: flex;
+      align-items: center;
+      gap: 8px; /* Space between icon and text */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Button shadow */
     }
-    button:hover {
-      background: #06b6d4;
+
+    button#startBtn {
+      background: #007bff; /* Primary blue background */
       color: #fff;
     }
-    button:disabled {
-      opacity: 0.6;
+    button#startBtn:hover:not(:disabled) {
+      background: #0056b3; /* Darker blue on hover */
+      transform: translateY(-2px); /* Lift effect */
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
     }
+
+    button#stopBtn {
+      background: #dc3545; /* Red for stop */
+      color: #fff;
+    }
+    button#stopBtn:hover:not(:disabled) {
+      background: #a71d2a; /* Darker red on hover */
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none; /* No shadow when disabled */
+      transform: none; /* No lift when disabled */
+    }
+
+    /* Final Report Styling */
     .final-report {
       display: none;
       background: #fff;
       margin: 20px auto;
-      padding: 20px;
-      max-width: 480px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 30px; /* More padding */
+      max-width: 500px; /* Slightly wider */
+      border-radius: 18px; /* Consistent border-radius */
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15); /* Stronger shadow */
       text-align: left;
+      border: 1px solid #eee; /* Subtle border */
     }
+
     .report-title {
-      font-weight: bold;
-      color: #06b6d4;
+      font-weight: 700; /* Bolder */
+      color: #007bff;
       text-align: center;
+      font-size: 1.8rem; /* Larger title */
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
-    .chew-remark.good { color: green; }
-    .chew-remark.average { color: orange; }
-    .chew-remark.poor { color: red; }
+
+    .final-report p {
+      font-size: 1.1rem; /* Slightly larger text */
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+    .final-report p strong {
+      color: #555; /* Slightly darker for labels */
+    }
+
+    .chew-remark {
+      font-size: 1.2rem; /* More prominent remark */
+      font-weight: 600;
+      text-align: center;
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: #f8f9fa; /* Light background for remarks */
+      border: 1px solid #e9ecef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .chew-remark.good {
+      color: #28a745; /* Green */
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+    }
+    .chew-remark.average {
+      color: #ffc107; /* Orange */
+      background-color: #fff3cd;
+      border-color: #ffeeba;
+    }
+    .chew-remark.poor {
+      color: #dc3545; /* Red */
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+    }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h1>🦷 ChewCheck</h1>
+    <div id="assistant">
+      <img src="https://media.tenor.com/wVfhA-nP_7cAAAAi/tooth-cute.gif" alt="Assistant" />
+    </div>
 
-  <h1>🦷 ChewCheck</h1>
-  <div id="assistant">
-    <img src="https://media.tenor.com/wVfhA-nP_7cAAAAi/tooth-cute.gif" alt="Assistant" />
-  </div>
+    <video id="video" autoplay playsinline muted></video>
+    <div class="chew-count" id="chewCountDisplay"><i class="fas fa-teeth"></i> Chews: 0</div>
+    <div class="button-group">
+      <button id="startBtn"><i class="fas fa-video"></i> Start Webcam</button>
+      <button id="stopBtn" disabled><i class="fas fa-stop-circle"></i> Stop Webcam</button>
+    </div>
 
-  <video id="video" autoplay playsinline muted></video>
-  <div class="chew-count" id="chewCountDisplay">Chews: 0</div>
-  <button id="startBtn">Start Webcam</button>
-  <button id="stopBtn" disabled>Stop Webcam</button>
-
-  <div class="final-report" id="finalReport">
-    <div class="report-title">📝 Chewing Report</div>
-    <p><strong>Total Chews:</strong> <span id="totalChews">0</span></p>
-    <p><strong>Session Duration:</strong> <span id="sessionDuration">0 sec</span></p>
-    <p><strong>Chews per Minute:</strong> <span id="chewsPerMin">0</span></p>
-    <p><strong>Consistency:</strong> <span id="chewingConsistency">0%</span></p>
-    <p class="chew-remark" id="chewRemark">Start chewing to get feedback!</p>
+    <div class="final-report" id="finalReport">
+      <div class="report-title">📝 Chewing Report</div>
+      <p><strong>Total Chews:</strong> <span id="totalChews">0</span></p>
+      <p><strong>Session Duration:</strong> <span id="sessionDuration">0 sec</span></p>
+      <p><strong>Chews per Minute:</strong> <span id="chewsPerMin">0</span></p>
+      <p><strong>Consistency:</strong> <span id="chewingConsistency">0%</span></p>
+      <p class="chew-remark" id="chewRemark"><i class="fas fa-info-circle"></i> Start chewing to get feedback!</p>
+    </div>
   </div>
 
   <!-- MediaPipe -->
@@ -139,7 +266,7 @@
         chewCount++;
         chewing = false;
         lastChewTime = now;
-        chewCountDisplay.textContent = `Chews: ${chewCount}`;
+        chewCountDisplay.innerHTML = `<i class="fas fa-teeth"></i> Chews: ${chewCount}`; // Updated to include icon
       }
     }
 
@@ -157,27 +284,32 @@
     faceMesh.onResults(onResults);
 
     startBtn.onclick = async () => {
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: 640, height: 480, frameRate: { ideal: 30 } }
-      });
-      video.srcObject = stream;
-      chewCount = 0;
-      chewing = false;
-      chewCountDisplay.textContent = "Chews: 0";
-      finalReport.style.display = "none";
-      startTime = new Date();
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { width: 640, height: 480, frameRate: { ideal: 30 } }
+        });
+        video.srcObject = stream;
+        chewCount = 0;
+        chewing = false;
+        chewCountDisplay.innerHTML = `<i class="fas fa-teeth"></i> Chews: 0`; // Updated to include icon
+        finalReport.style.display = "none";
+        startTime = new Date();
 
-      camera = new Camera(video, {
-        onFrame: async () => {
-          await faceMesh.send({ image: video });
-        },
-        width: 640,
-        height: 480
-      });
+        camera = new Camera(video, {
+          onFrame: async () => {
+            await faceMesh.send({ image: video });
+          },
+          width: 640,
+          height: 480
+        });
 
-      camera.start();
-      startBtn.disabled = true;
-      stopBtn.disabled = false;
+        camera.start();
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+      } catch (error) {
+        console.error("Error accessing webcam:", error);
+        alert("Could not start webcam. Please ensure you have a webcam and have granted permission.");
+      }
     };
 
     stopBtn.onclick = () => {
@@ -193,6 +325,8 @@
       const endTime = new Date();
       const durationSec = Math.floor((endTime - startTime) / 1000);
       const chewsPerMin = (chewCount / durationSec) * 60;
+      // Consistency calculation: (chews / (duration in seconds / 2)) * 100
+      // This assumes an ideal chew every 2 seconds. Adjust as needed.
       const consistency = Math.min(100, Math.round((chewCount / (durationSec / 2)) * 100));
 
       totalChewsEl.textContent = chewCount;
@@ -202,23 +336,26 @@
 
       let remark = "Start chewing to get feedback!";
       let remarkClass = "";
+      let remarkIcon = "fas fa-info-circle";
 
       if (chewCount < 5) {
         remark = "You're chewing too little. Try to chew more!";
         remarkClass = "poor";
+        remarkIcon = "fas fa-exclamation-triangle";
       } else if (chewsPerMin < 20) {
         remark = "Average chewing. Try to be consistent!";
         remarkClass = "average";
+        remarkIcon = "fas fa-meh";
       } else {
         remark = "Great job! Very consistent chewing!";
         remarkClass = "good";
+        remarkIcon = "fas fa-check-circle";
       }
 
-      chewRemarkEl.textContent = remark;
+      chewRemarkEl.innerHTML = `<i class="${remarkIcon}"></i> ${remark}`; // Updated to include icon
       chewRemarkEl.className = `chew-remark ${remarkClass}`;
       finalReport.style.display = "block";
     };
   </script>
 </body>
 </html>
-
