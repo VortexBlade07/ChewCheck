@@ -3,65 +3,261 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ChewCheck - Multi‑User Tracker</title>
+  <title>ChewCheck - Fast Detection</title>
+
+  <!-- Google Fonts - Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome for Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
   <style>
-    body { font-family:'Poppins',sans-serif; background:linear-gradient(to br,#a7d9ff,#e0f2ff); color:#333; text-align:center; margin:0; padding:20px; min-height:100vh; display:flex; flex-direction:column; align-items:center; }
-    .container { max-width:600px; width:100%; background:rgba(255,255,255,0.9); border-radius:20px; padding:30px; box-shadow:0 10px 30px rgba(0,0,0,0.15); margin:20px 0; position:relative; }
-    h1 { color:#007bff; font-size:2.8rem; font-weight:700; letter-spacing:-0.5px; margin-bottom:20px; }
-    video { width:100%; max-width:480px; border-radius:18px; margin:20px auto; display:block; position:relative; }
-    .overlay-name { position:absolute; color:#fff; background:rgba(0,123,255,0.7); padding:4px 8px; border-radius:4px; font-size:1rem; pointer-events:none; transform:translate(-50%,-120%); }
-    .chew-count { font-size:2rem; color:#007bff; margin-bottom:25px; display:flex; align-items:center; justify-content:center; gap:10px; }
-    .button-group { display:flex; justify-content:center; gap:15px; margin-bottom:30px; }
-    button { padding:12px 25px; border-radius:25px; border:none; font-size:1.1rem; font-weight:600; cursor:pointer; transition:all .3s; display:flex; align-items:center; gap:8px; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
-    button#startBtn { background:#007bff; color:#fff; }
-    button#stopBtn { background:#dc3545; color:#fff; }
-    button:disabled { opacity:0.5; cursor:not-allowed; box-shadow:none; transform:none; }
-    .final-report { display:none; background:#fff; margin:20px auto; padding:30px; max-width:500px; border-radius:18px; box-shadow:0 8px 20px rgba(0,0,0,0.15); text-align:left; border:1px solid #eee; }
-    .report-title { text-align:center; color:#007bff; font-size:1.8rem; font-weight:700; margin-bottom:20px; display:flex; align-items:center; justify-content:center; gap:10px; }
-    .chew-remark { font-size:1.2rem; font-weight:600; text-align:center; margin-top:25px; padding:15px; border-radius:10px; background-color:#f8f9fa; border:1px solid #e9ecef; display:flex; align-items:center; justify-content:center; gap:10px; }
-    .chew-remark.good { color:#28a745; background:#d4edda; border-color:#c3e6cb; }
-    .chew-remark.average { color:#ffc107; background:#fff3cd; border-color:#ffeeba; }
-    .chew-remark.poor { color:#dc3545; background:#f8d7da; border-color:#f5c6cb; }
-    #namePopup { position:fixed; top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999; }
-    #namePopup > div { background:#fff; padding:20px; border-radius:10px; text-align:center; max-width:90%; }
-    #userSelect { margin:10px auto 20px; font-size:1rem; padding:6px; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom right, #a7d9ff, #e0f2ff);
+      color: #333;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #007bff;
+      margin: 0 0 20px;
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    #assistant img {
+      width: 120px;
+      margin: 10px 0 20px;
+      animation: bounce 2s infinite ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    video {
+      width: 100%;
+      max-width: 480px;
+      border-radius: 18px;
+      margin: 20px auto 15px;
+      display: block;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border: 2px solid #e0f2ff;
+    }
+
+    .chew-count {
+      font-size: 2rem;
+      color: #007bff;
+      font-weight: 600;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .chew-count i {
+      color: #007bff;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    button {
+      padding: 12px 25px;
+      border-radius: 25px;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    button#startBtn {
+      background: #007bff;
+      color: #fff;
+    }
+
+    button#startBtn:hover:not(:disabled) {
+      background: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    button#stopBtn {
+      background: #dc3545;
+      color: #fff;
+    }
+
+    button#stopBtn:hover:not(:disabled) {
+      background: #a71d2a;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .final-report {
+      display: none;
+      background: #fff;
+      margin: 20px auto;
+      padding: 30px;
+      max-width: 500px;
+      border-radius: 18px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      text-align: left;
+      border: 1px solid #eee;
+    }
+
+    .report-title {
+      font-weight: 700;
+      color: #007bff;
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .final-report p {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+
+    .final-report p strong {
+      color: #555;
+    }
+
+    .chew-remark {
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 10px;
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .chew-remark.good {
+      color: #28a745;
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+    }
+
+    .chew-remark.average {
+      color: #ffc107;
+      background-color: #fff3cd;
+      border-color: #ffeeba;
+    }
+
+    .chew-remark.poor {
+      color: #dc3545;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+    }
+
+    #namePopup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    #namePopup > div {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 90%;
+    }
+
+    #greeting {
+      font-size: 18px;
+      color: #333;
+      text-align: center;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
-  <!-- Popup -->
+
+  <!-- Name Popup -->
   <div id="namePopup">
     <div>
-      <h3>👤 Select or Enter a Name</h3>
-      <select id="userSelect">
-        <option value="">— Select User —</option>
-      </select><br><br>
-      <input type="text" id="newUserInput" placeholder="New user name" style="padding:10px; width:80%; font-size:1rem;" /><br><br>
-      <button onclick="saveUser()">🔐 Continue</button>
+      <h3>👤 Enter Your Name</h3>
+      <input type="text" id="userNameInput" placeholder="Your name" style="padding: 10px; width: 80%; font-size: 1rem;" />
+      <br><br>
+      <button onclick="saveUserName()" style="padding: 10px 20px; font-size: 1rem;">Start</button>
     </div>
   </div>
-  <!-- Greeting/Select area -->
+
+  <!-- Greeting -->
   <p id="greeting"></p>
+
   <div class="container">
     <h1>🦷 ChewCheck</h1>
-    <div id="assistant"><img src="https://media.tenor.com/wVfhA-nP_7cAAAAi/tooth-cute.gif" alt="Assistant" /></div>
-    <div style="position:relative;">
-      <video id="video" autoplay playsinline muted></video>
-      <div id="nameOverlay" class="overlay-name" style="display:none;">User</div>
+    <div id="assistant">
+      <img src="https://media.tenor.com/wVfhA-nP_7cAAAAi/tooth-cute.gif" alt="Assistant" />
     </div>
+
+    <video id="video" autoplay playsinline muted></video>
     <div class="chew-count" id="chewCountDisplay"><i class="fas fa-teeth"></i> Chews: 0</div>
     <div class="button-group">
       <button id="startBtn"><i class="fas fa-video"></i> Start Webcam</button>
       <button id="stopBtn" disabled><i class="fas fa-stop-circle"></i> Stop Webcam</button>
     </div>
+
     <div class="final-report" id="finalReport">
       <div class="report-title">📝 Chewing Report</div>
-      <p><strong>User:</strong> <span id="reportUser"></span></p>
       <p><strong>Total Chews:</strong> <span id="totalChews">0</span></p>
       <p><strong>Session Duration:</strong> <span id="sessionDuration">0 sec</span></p>
       <p><strong>Chews per Minute:</strong> <span id="chewsPerMin">0</span></p>
-      <p><strong>Consistency:</strong> <span id="chewingConsistency">0%</span></p>
+      <p><strong>Chewing Consistency:</strong> <span id="chewingConsistency">0%</span></p>
       <p class="chew-remark" id="chewRemark"><i class="fas fa-info-circle"></i> Start chewing to get feedback!</p>
     </div>
   </div>
@@ -70,41 +266,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
 
+  <!-- Chew Detection Script -->
   <script>
-    // DOM Elements
-    const namePopup = document.getElementById('namePopup');
-    const userSelect = document.getElementById('userSelect');
-    const newUserInput = document.getElementById('newUserInput');
-    const greeting = document.getElementById('greeting');
-    const nameOverlay = document.getElementById('nameOverlay');
-    const reportUser = document.getElementById('reportUser');
-
-    // Load users from storage
-    const loadUsers = () => JSON.parse(localStorage.getItem('chewUsers')||'[]');
-    const saveUsers = users=> localStorage.setItem('chewUsers', JSON.stringify(users));
-
-    // Save selected/entered user
-    function saveUser(){
-      let name = userSelect.value || newUserInput.value.trim();
-      if(!name) return alert('Enter or select a name.');
-      let users = loadUsers();
-      if (!users.includes(name)) users.push(name), saveUsers(users);
-      localStorage.setItem('chewCurrentUser', name);
-      namePopup.style.display='none';
-      greeting.innerText = `👋 ${name}, ready to chew!`;
-    }
-
-    // Populate dropdown on load
-    window.onload = () => {
-      let users = loadUsers();
-      users.forEach(u=>{
-        let opt = document.createElement('option');
-        opt.value = u; opt.textContent = u;
-        userSelect.appendChild(opt);
-      });
-    };
-
-    // Chew detection logic
     const video = document.getElementById('video');
     const startBtn = document.getElementById('startBtn');
     const stopBtn = document.getElementById('stopBtn');
@@ -116,82 +279,148 @@
     const chewingConsistencyEl = document.getElementById('chewingConsistency');
     const chewRemarkEl = document.getElementById('chewRemark');
 
-    let stream=null, chewCount=0, camera=null, startTime=null, chewing=false, lastChewTime=0;
-    const MOUTH_OPEN_THRESHOLD=0.05;
+    let stream = null;
+    let chewCount = 0;
+    let camera = null;
+    let startTime = null;
+    let chewing = false;
+    let lastChewTime = 0;
 
-    function getMouthOpenRatio(l) {
-      return Math.abs(l[13].y - l[14].y) / Math.abs(l[78].x - l[308].x);
+    const MOUTH_OPEN_THRESHOLD = 0.05;
+
+    function getMouthOpenRatio(landmarks) {
+      const top = landmarks[13];
+      const bottom = landmarks[14];
+      const left = landmarks[78];
+      const right = landmarks[308];
+      const vertical = Math.abs(top.y - bottom.y);
+      const horizontal = Math.abs(left.x - right.x);
+      return vertical / horizontal;
     }
 
-    const faceMesh = new FaceMesh({ locateFile: f=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}` });
-    faceMesh.setOptions({ maxNumFaces:1, refineLandmarks:true, minDetectionConfidence:0.6, minTrackingConfidence:0.6 });
-    faceMesh.onResults(onResults);
+    function onResults(results) {
+      if (!results.multiFaceLandmarks || results.multiFaceLandmarks.length === 0) return;
+      const landmarks = results.multiFaceLandmarks[0];
+      const ratio = getMouthOpenRatio(landmarks);
 
-    function onResults(results){
-      if (!results.multiFaceLandmarks?.length) { nameOverlay.style.display='none'; return; }
-      const l = results.multiFaceLandmarks[0];
-      const ratio = getMouthOpenRatio(l);
       const now = Date.now();
+      if (ratio > MOUTH_OPEN_THRESHOLD && !chewing && now - lastChewTime > 300) {
+        chewing = true;
+      }
 
-      // display overlay above chin (landmark 152)
-      const lm = l[152];
-      const rect = video.getBoundingClientRect();
-      nameOverlay.style.left = `${rect.left + lm.x * rect.width}px`;
-      nameOverlay.style.top = `${rect.top + lm.y * rect.height}px`;
-      nameOverlay.innerText = localStorage.getItem('chewCurrentUser') || 'User';
-      nameOverlay.style.display = 'block';
-
-      if (ratio > MOUTH_OPEN_THRESHOLD && !chewing && now - lastChewTime >300) chewing=true;
       if (ratio < MOUTH_OPEN_THRESHOLD && chewing) {
-        chewCount++; chewing=false; lastChewTime=now;
+        chewCount++;
+        chewing = false;
+        lastChewTime = now;
         chewCountDisplay.innerHTML = `<i class="fas fa-teeth"></i> Chews: ${chewCount}`;
       }
     }
 
-    startBtn.onclick = async ()=>{
-      saveTodayData(); chewCount=0; lastChewTime=0; startTime=new Date();
-      reportUser.textContent = localStorage.getItem('chewCurrentUser');
-      chewCountDisplay.innerHTML = `<i class="fas fa-teeth"></i> Chews: 0`;
-      finalReport.style.display='none';
-      stream = await navigator.mediaDevices.getUserMedia({video:{width:640,height:480,frameRate:{ideal:30}}});
-      video.srcObject = stream;
-      camera = new Camera(video,{onFrame:async()=>await faceMesh.send({image:video}),width:640,height:480});
-      camera.start();
-      startBtn.disabled=true; stopBtn.disabled=false;
+    const faceMesh = new FaceMesh({
+      locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+    });
+
+    faceMesh.setOptions({
+      maxNumFaces: 1,
+      refineLandmarks: true,
+      minDetectionConfidence: 0.6,
+      minTrackingConfidence: 0.6
+    });
+
+    faceMesh.onResults(onResults);
+
+    startBtn.onclick = async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { width: 640, height: 480, frameRate: { ideal: 30 } }
+        });
+        video.srcObject = stream;
+        chewCount = 0;
+        chewing = false;
+        chewCountDisplay.innerHTML = `<i class="fas fa-teeth"></i> Chews: 0`;
+        finalReport.style.display = "none";
+        startTime = new Date();
+
+        camera = new Camera(video, {
+          onFrame: async () => {
+            await faceMesh.send({ image: video });
+          },
+          width: 640,
+          height: 480
+        });
+
+        camera.start();
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+      } catch (error) {
+        console.error("Error accessing webcam:", error);
+        alert("Could not start webcam. Please ensure you have a webcam and have granted permission.");
+      }
     };
 
-    stopBtn.onclick = ()=>{
-      if(camera)camera.stop(); if(stream)stream.getTracks().forEach(t=>t.stop());
-      stopBtn.disabled=true; startBtn.disabled=false;
-      const durationSec=Math.floor((new Date()-startTime)/1000);
-      const perMin=(chewCount/durationSec)*60;
-      const consistency = Math.min(100,Math.round((chewCount/(durationSec/2))*100));
-      totalChewsEl.textContent=chewCount;
-      sessionDurationEl.textContent=`${durationSec} sec`;
-      chewsPerMinEl.textContent=perMin.toFixed(1);
-      chewingConsistencyEl.textContent=`${consistency}%`;
-      let remark='Start chewing to get feedback!', cls='', icon='fas fa-info-circle';
-      if(chewCount<5){remark="You're chewing too little."; cls='poor'; icon='fas fa-exclamation-triangle';}
-      else if(perMin<20){remark="Average chewing."; cls='average'; icon='fas fa-meh';}
-      else{remark="Great job! Very consistent chewing!"; cls='good'; icon='fas fa-check-circle';}
-      chewRemarkEl.innerHTML=`<i class="${icon}"></i> ${remark}`; chewRemarkEl.className=`chew-remark ${cls}`;
-      finalReport.style.display='block';
-      saveTodayData(); showUserHistory();
+    stopBtn.onclick = () => {
+      if (camera) camera.stop();
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+
+      stopBtn.disabled = true;
+      startBtn.disabled = false;
+
+      const endTime = new Date();
+      const durationSec = Math.floor((endTime - startTime) / 1000);
+      const chewsPerMin = (chewCount / durationSec) * 60;
+      const consistency = Math.min(100, Math.round((chewCount / (durationSec / 2)) * 100));
+
+      totalChewsEl.textContent = chewCount;
+      sessionDurationEl.textContent = `${durationSec} sec`;
+      chewsPerMinEl.textContent = chewsPerMin.toFixed(1);
+      chewingConsistencyEl.textContent = `${consistency}%`;
+
+      let remark = "Start chewing to get feedback!";
+      let remarkClass = "";
+      let remarkIcon = "fas fa-info-circle";
+
+      if (chewCount < 5) {
+        remark = "You're chewing too little. Try to chew more!";
+        remarkClass = "poor";
+        remarkIcon = "fas fa-exclamation-triangle";
+      } else if (chewsPerMin < 20) {
+        remark = "Average chewing. Try to be consistent!";
+        remarkClass = "average";
+        remarkIcon = "fas fa-meh";
+      } else {
+        remark = "Great job! Very consistent chewing!";
+        remarkClass = "good";
+        remarkIcon = "fas fa-check-circle";
+      }
+
+      chewRemarkEl.innerHTML = `<i class="${remarkIcon}"></i> ${remark}`;
+      chewRemarkEl.className = `chew-remark ${remarkClass}`;
+      finalReport.style.display = "block";
     };
 
-    function saveTodayData(){
-      const user = localStorage.getItem('chewCurrentUser');
-      if(!user) return;
-      const key = `chewData_${user}_${new Date().toDateString()}`;
-      const prev = parseInt(localStorage.getItem(key)||'0');
-      localStorage.setItem(key, prev + chewCount);
+    // 👤 Handle Name Popup
+    function saveUserName() {
+      const name = document.getElementById("userNameInput").value.trim();
+      if (name) {
+        localStorage.setItem("chewUserName", name);
+        document.getElementById("namePopup").style.display = "none";
+        document.getElementById("greeting").innerText = `👋 Hello, ${name}! Chewing detection is ready.`;
+      } else {
+        alert("Please enter your name.");
+      }
     }
 
-    function showUserHistory(){
-      const user = localStorage.getItem('chewCurrentUser');
-      if(!user) return;
-      // could add a history table here
-    }
+    window.onload = () => {
+      const storedName = localStorage.getItem("chewUserName");
+      if (storedName) {
+        document.getElementById("namePopup").style.display = "none";
+        document.getElementById("greeting").innerText = `👋 Welcome back, ${storedName}!`;
+      }
+    };
   </script>
+
 </body>
 </html>
