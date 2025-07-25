@@ -401,24 +401,18 @@
       finalReport.style.display = "block";
     };
 
-    // 👤 Handle Name Popup
     function saveUserName() {
-      const name = document.getElementById("userNameInput").value.trim();
-      if (name) {
-        localStorage.setItem("chewUserName", name);
-        document.getElementById("namePopup").style.display = "none";
-        document.getElementById("greeting").innerText = `👋 Hello, ${name}! Chewing detection is ready.`;
-      } else {
-        alert("Please enter your name.");
-      }
-    }
+  const name = document.getElementById("userNameInput").value.trim();
+  if (name) {
+    document.getElementById("namePopup").style.display = "none";
+    document.getElementById("greeting").innerText = `👋 Hello, ${name}! Chewing detection is ready.`;
+  } else {
+    alert("Please enter your name.");
+  }
+}
 
-    window.onload = () => {
-      const storedName = localStorage.getItem("chewUserName");
-      if (storedName) {
-        document.getElementById("namePopup").style.display = "none";
-        document.getElementById("greeting").innerText = `👋 Welcome back, ${storedName}!`;
-      }
+
+   
     };
   </script>
 
