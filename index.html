@@ -5,25 +5,180 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ChewCheck - Fast Detection</title>
 
-  <!-- Google Fonts - Poppins -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <!-- Font Awesome for Icons -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
   <style>
-    /* (Same styling as before, unchanged) */
-    /* Paste your original <style> section here without any change */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #b3e5fc, #e1f5fe);
+      color: #333;
+      text-align: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #0288d1;
+      margin-bottom: 20px;
+    }
+
+    #namePopup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    #namePopup div {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      background: #ffffffd9;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    #assistant img {
+      width: 120px;
+      margin: 10px auto;
+      display: block;
+    }
+
+    video {
+      width: 100%;
+      border-radius: 15px;
+      margin-bottom: 10px;
+    }
+
+    .chew-count {
+      font-size: 1.2rem;
+      background: #e3f2fd;
+      padding: 10px;
+      border-radius: 10px;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .button-group button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      color: white;
+    }
+
+    #startBtn {
+      background: #4caf50;
+    }
+
+    #startBtn:hover {
+      background: #43a047;
+    }
+
+    #stopBtn {
+      background: #f44336;
+    }
+
+    #stopBtn:hover {
+      background: #e53935;
+    }
+
+    .final-report {
+      display: none;
+      margin-top: 30px;
+      background: #f1f8e9;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: left;
+    }
+
+    .report-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #33691e;
+    }
+
+    .chew-remark {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 500;
+    }
+
+    .chew-remark.poor {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .chew-remark.average {
+      background: #fff3e0;
+      color: #ef6c00;
+    }
+
+    .chew-remark.good {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    #greeting {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      color: #006064;
+      font-weight: 500;
+    }
+
+    input[type="text"] {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Name Popup -->
+  <!-- 👤 Name Input Popup -->
   <div id="namePopup">
     <div>
       <h3>👤 Enter Your Name</h3>
       <input type="text" id="userNameInput" placeholder="Your name" style="padding: 10px; width: 80%; font-size: 1rem;" />
       <br><br>
-      <button onclick="saveUserName()" style="padding: 10px 20px; font-size: 1rem;">Start</button>
+      <button onclick="saveUserName()" style="padding: 10px 20px; font-size: 1rem; background: #1976d2; color: white; border-radius: 8px;">Start</button>
     </div>
   </div>
 
@@ -38,6 +193,7 @@
 
     <video id="video" autoplay playsinline muted></video>
     <div class="chew-count" id="chewCountDisplay"><i class="fas fa-teeth"></i> Chews: 0</div>
+    
     <div class="button-group">
       <button id="startBtn"><i class="fas fa-video"></i> Start Webcam</button>
       <button id="stopBtn" disabled><i class="fas fa-stop-circle"></i> Stop Webcam</button>
@@ -57,7 +213,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
 
-  <!-- Chew Detection Script -->
+  <!-- Detection Script -->
   <script>
     const video = document.getElementById('video');
     const startBtn = document.getElementById('startBtn');
@@ -192,20 +348,16 @@
       finalReport.style.display = "block";
     };
 
-    // ✅ FIXED VERSION
     function saveUserName() {
       const name = document.getElementById("userNameInput").value.trim();
       if (name) {
         document.getElementById("namePopup").style.display = "none";
         document.getElementById("greeting").innerText = `👋 Hello, ${name}! Chewing detection is ready.`;
-
-        // Optionally auto-start webcam after entering name:
-        setTimeout(() => startBtn.click(), 300); // Slight delay to prevent timing issues
+        setTimeout(() => startBtn.click(), 300);
       } else {
         alert("Please enter your name.");
       }
     }
   </script>
-
 </body>
 </html>
