@@ -4,50 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ChewCheck - Fast Detection</title>
+
   <!-- Google Fonts - Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <!-- Font Awesome for Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
   <style>
-    /* General Body and Typography */
     body {
-      font-family: 'Poppins', sans-serif; /* Changed font */
-      background: linear-gradient(to bottom right, #a7d9ff, #e0f2ff); /* Refined gradient */
-      color: #333; /* Darker text for better contrast */
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom right, #a7d9ff, #e0f2ff);
+      color: #333;
       text-align: center;
       margin: 0;
-      padding: 20px; /* Added padding to body */
-      min-height: 100vh; /* Ensure gradient covers full height */
+      padding: 20px;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
     }
 
-    /* Main Container for content */
     .container {
-      max-width: 600px; /* Limit content width */
+      max-width: 600px;
       width: 100%;
-      background: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+      background: rgba(255, 255, 255, 0.9);
       border-radius: 20px;
       padding: 30px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
       margin-top: 20px;
       margin-bottom: 20px;
     }
 
     h1 {
-      color: #007bff; /* Primary blue, slightly darker for contrast */
-      margin: 0 0 20px; /* Adjusted margin */
-      font-size: 2.8rem; /* Larger title */
-      font-weight: 700; /* Bolder */
+      color: #007bff;
+      margin: 0 0 20px;
+      font-size: 2.8rem;
+      font-weight: 700;
       letter-spacing: -0.5px;
     }
 
     #assistant img {
-      width: 120px; /* Slightly larger */
-      margin: 10px 0 20px; /* Adjusted margin */
-      animation: bounce 2s infinite ease-in-out; /* Added subtle animation */
+      width: 120px;
+      margin: 10px 0 20px;
+      animation: bounce 2s infinite ease-in-out;
     }
 
     @keyframes bounce {
@@ -56,25 +56,26 @@
     }
 
     video {
-      width: 100%; /* Use 100% of container width */
+      width: 100%;
       max-width: 480px;
-      border-radius: 18px; /* Slightly larger border-radius */
+      border-radius: 18px;
       margin: 20px auto 15px;
       display: block;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for video */
-      border: 2px solid #e0f2ff; /* Light border */
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border: 2px solid #e0f2ff;
     }
 
     .chew-count {
-      font-size: 2rem; /* Larger font size */
+      font-size: 2rem;
       color: #007bff;
-      font-weight: 600; /* Bolder */
-      margin-bottom: 25px; /* More space below */
+      font-weight: 600;
+      margin-bottom: 25px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px; /* Space between icon and text */
+      gap: 10px;
     }
+
     .chew-count i {
       color: #007bff;
     }
@@ -82,40 +83,42 @@
     .button-group {
       display: flex;
       justify-content: center;
-      gap: 15px; /* Space between buttons */
-      margin-bottom: 30px; /* Space below buttons */
+      gap: 15px;
+      margin-bottom: 30px;
     }
 
     button {
-      padding: 12px 25px; /* More padding */
-      border-radius: 25px; /* Pill-shaped buttons */
-      border: none; /* Remove default border */
-      font-size: 1.1rem; /* Slightly larger font */
+      padding: 12px 25px;
+      border-radius: 25px;
+      border: none;
+      font-size: 1.1rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease; /* Smooth transitions */
+      transition: all 0.3s ease;
       display: flex;
       align-items: center;
-      gap: 8px; /* Space between icon and text */
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Button shadow */
+      gap: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     button#startBtn {
-      background: #007bff; /* Primary blue background */
+      background: #007bff;
       color: #fff;
     }
+
     button#startBtn:hover:not(:disabled) {
-      background: #0056b3; /* Darker blue on hover */
-      transform: translateY(-2px); /* Lift effect */
+      background: #0056b3;
+      transform: translateY(-2px);
       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
     }
 
     button#stopBtn {
-      background: #dc3545; /* Red for stop */
+      background: #dc3545;
       color: #fff;
     }
+
     button#stopBtn:hover:not(:disabled) {
-      background: #a71d2a; /* Darker red on hover */
+      background: #a71d2a;
       transform: translateY(-2px);
       box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
     }
@@ -123,28 +126,27 @@
     button:disabled {
       opacity: 0.5;
       cursor: not-allowed;
-      box-shadow: none; /* No shadow when disabled */
-      transform: none; /* No lift when disabled */
+      box-shadow: none;
+      transform: none;
     }
 
-    /* Final Report Styling */
     .final-report {
       display: none;
       background: #fff;
       margin: 20px auto;
-      padding: 30px; /* More padding */
-      max-width: 500px; /* Slightly wider */
-      border-radius: 18px; /* Consistent border-radius */
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15); /* Stronger shadow */
+      padding: 30px;
+      max-width: 500px;
+      border-radius: 18px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
       text-align: left;
-      border: 1px solid #eee; /* Subtle border */
+      border: 1px solid #eee;
     }
 
     .report-title {
-      font-weight: 700; /* Bolder */
+      font-weight: 700;
       color: #007bff;
       text-align: center;
-      font-size: 1.8rem; /* Larger title */
+      font-size: 1.8rem;
       margin-bottom: 20px;
       display: flex;
       align-items: center;
@@ -153,22 +155,23 @@
     }
 
     .final-report p {
-      font-size: 1.1rem; /* Slightly larger text */
+      font-size: 1.1rem;
       margin-bottom: 10px;
       line-height: 1.6;
     }
+
     .final-report p strong {
-      color: #555; /* Slightly darker for labels */
+      color: #555;
     }
 
     .chew-remark {
-      font-size: 1.2rem; /* More prominent remark */
+      font-size: 1.2rem;
       font-weight: 600;
       text-align: center;
       margin-top: 25px;
       padding: 15px;
       border-radius: 10px;
-      background-color: #f8f9fa; /* Light background for remarks */
+      background-color: #f8f9fa;
       border: 1px solid #e9ecef;
       display: flex;
       align-items: center;
@@ -177,23 +180,65 @@
     }
 
     .chew-remark.good {
-      color: #28a745; /* Green */
+      color: #28a745;
       background-color: #d4edda;
       border-color: #c3e6cb;
     }
+
     .chew-remark.average {
-      color: #ffc107; /* Orange */
+      color: #ffc107;
       background-color: #fff3cd;
       border-color: #ffeeba;
     }
+
     .chew-remark.poor {
-      color: #dc3545; /* Red */
+      color: #dc3545;
       background-color: #f8d7da;
       border-color: #f5c6cb;
+    }
+
+    #namePopup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    #namePopup > div {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 90%;
+    }
+
+    #greeting {
+      font-size: 18px;
+      color: #333;
+      text-align: center;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
+
+  <!-- Name Popup -->
+  <div id="namePopup">
+    <div>
+      <h3>👤 Enter Your Name</h3>
+      <input type="text" id="userNameInput" placeholder="Your name" style="padding: 10px; width: 80%; font-size: 1rem;" />
+      <br><br>
+      <button onclick="saveUserName()" style="padding: 10px 20px; font-size: 1rem;">Start</button>
+    </div>
+  </div>
+
+  <!-- Greeting -->
+  <p id="greeting"></p>
+
   <div class="container">
     <h1>🦷 ChewCheck</h1>
     <div id="assistant">
@@ -212,7 +257,7 @@
       <p><strong>Total Chews:</strong> <span id="totalChews">0</span></p>
       <p><strong>Session Duration:</strong> <span id="sessionDuration">0 sec</span></p>
       <p><strong>Chews per Minute:</strong> <span id="chewsPerMin">0</span></p>
-      <p><strong>Consistency:</strong> <span id="chewingConsistency">0%</span></p>
+      <p><strong>Chewing Consistency:</strong> <span id="chewingConsistency">0%</span></p>
       <p class="chew-remark" id="chewRemark"><i class="fas fa-info-circle"></i> Start chewing to get feedback!</p>
     </div>
   </div>
@@ -221,6 +266,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
 
+  <!-- Chew Detection Script -->
   <script>
     const video = document.getElementById('video');
     const startBtn = document.getElementById('startBtn');
@@ -240,7 +286,7 @@
     let chewing = false;
     let lastChewTime = 0;
 
-    const MOUTH_OPEN_THRESHOLD = 0.05; // more sensitive
+    const MOUTH_OPEN_THRESHOLD = 0.05;
 
     function getMouthOpenRatio(landmarks) {
       const top = landmarks[13];
@@ -266,7 +312,7 @@
         chewCount++;
         chewing = false;
         lastChewTime = now;
-        chewCountDisplay.innerHTML = `<i class="fas fa-teeth"></i> Chews: ${chewCount}`; // Updated to include icon
+        chewCountDisplay.innerHTML = `<i class="fas fa-teeth"></i> Chews: ${chewCount}`;
       }
     }
 
@@ -291,7 +337,7 @@
         video.srcObject = stream;
         chewCount = 0;
         chewing = false;
-        chewCountDisplay.innerHTML = `<i class="fas fa-teeth"></i> Chews: 0`; // Updated to include icon
+        chewCountDisplay.innerHTML = `<i class="fas fa-teeth"></i> Chews: 0`;
         finalReport.style.display = "none";
         startTime = new Date();
 
@@ -325,8 +371,6 @@
       const endTime = new Date();
       const durationSec = Math.floor((endTime - startTime) / 1000);
       const chewsPerMin = (chewCount / durationSec) * 60;
-      // Consistency calculation: (chews / (duration in seconds / 2)) * 100
-      // This assumes an ideal chew every 2 seconds. Adjust as needed.
       const consistency = Math.min(100, Math.round((chewCount / (durationSec / 2)) * 100));
 
       totalChewsEl.textContent = chewCount;
@@ -352,10 +396,31 @@
         remarkIcon = "fas fa-check-circle";
       }
 
-      chewRemarkEl.innerHTML = `<i class="${remarkIcon}"></i> ${remark}`; // Updated to include icon
+      chewRemarkEl.innerHTML = `<i class="${remarkIcon}"></i> ${remark}`;
       chewRemarkEl.className = `chew-remark ${remarkClass}`;
       finalReport.style.display = "block";
     };
+
+    // 👤 Handle Name Popup
+    function saveUserName() {
+      const name = document.getElementById("userNameInput").value.trim();
+      if (name) {
+        localStorage.setItem("chewUserName", name);
+        document.getElementById("namePopup").style.display = "none";
+        document.getElementById("greeting").innerText = `👋 Hello, ${name}! Chewing detection is ready.`;
+      } else {
+        alert("Please enter your name.");
+      }
+    }
+
+    window.onload = () => {
+      const storedName = localStorage.getItem("chewUserName");
+      if (storedName) {
+        document.getElementById("namePopup").style.display = "none";
+        document.getElementById("greeting").innerText = `👋 Welcome back, ${storedName}!`;
+      }
+    };
   </script>
+
 </body>
 </html>
