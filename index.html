@@ -414,10 +414,11 @@
     }
 
     window.onload = () => {
-      const storedName = localStorage.getItem("chewUserName");
-      if (storedName) {
-        document.getElementById("namePopup").style.display = "none";
-        document.getElementById("greeting").innerText = `👋 Welcome back, ${storedName}!`;
+  // Always clear any previously stored name
+  localStorage.removeItem("chewUserName");
+  document.getElementById("namePopup").style.display = "flex";
+};
+
       }
     };
   </script>
